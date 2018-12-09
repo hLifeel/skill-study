@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>购物车示例-商品分类</title>
+    <style>
+        *{margin: 0; padding: 0;}
+        [v-cloak]{
+            display: none;
+        }
+        table{
+            border: solid 1px #e9e9e9;
+            border-collapse: collapse;
+            border-spacing: 0;
+            empty-cells: show;
+        }
+        th,td{
+            padding: 8px 16px;
+            border: solid 1px #e9e9e9;
+            text-align: left;
+        }
+        th{
+            background: #f7f7f7;
+            color:#5c6b77;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-cloak>
+   <template v-if="Object.keys(list).length">
+        <table cellpadding="0" cellspacing="0" border="0">
+            <thead>
+                <tr>
+                    <th>商品类别</th>
+                    <th>商品名称</th>
+                    <th>商品单价</th>
+                    <th>购买数量</th>
+                    <th>操作</th>
+                    <th>
+                        <button @click="switchCheck()">全选</button>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(val,category,index) in list">
+                    <td>{{category}}</td>
+                    <td style="padding: 0;">
+                        <table cellspacing="0" cellpadding="0" border="0" style="border: none;">
+                            <tr v-for="(item,num) in val">
+                                <td style="border: none;">{{item.name}}</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="padding: 0;">
+                        <table cellspacing="0" cellpadding="0" border="0" style="border: none;">
+                            <tr v-for="(item,num) in val">
+                                <td style="border: none;">{{item.price}}</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="padding: 0;">
+                        <table cellspacing="0" cellpadding="0" border="0" style="border: none;">
+                            <tr v-for="(item,num) in val">
+                                <td style="border: none;">
+                                    <button
+                                            @click="handleReduce(index,num)"
+                                            :disabled="item.count===1">-</button>
+                                    {{item.count}}
+                                    <button @click="handleAdd(index,num)">+</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="padding: 0;">
+                        <table cellspacing="0" cellpadding="0" border="0" style="border: none;">
+                            <tr v-for="(item,num) in val">
+                                <td style="border: none;">
+                                    <button @click="handleRemove(index,num)">移除</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="padding: 0;" class="typeCheck">
+                        <table cellspacing="0" cellpadding="0" border="0" style="border: none;">
+                            <tr v-for="(item,num) in val">
+                                <td style="border: none;">
+                                    <input type="checkbox" class="checkbox" @click="switchCheck(index,num)">
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+       <div>总价：￥{{totalPrice}}</div>
+   </template>
+    <div v-else>购物车为空</div>
+</div>
+
+<script src="js/vue.js"></script>
+<script>
+    var app= new Vue({
+        el:'#app',
+        data:{
+            total:0,
+            list:{
+                Electric:[
+                    {
+                        isCheck:false,
+                        name:'iPhone 7',
+                        price:6188,
+                        count:1
+                    },
+                    {
+                        isCheck:false,
+                        name:'iPad Pro',
+                        price:5888,
+                        count:1
+                    },
+                    {
+                        isCheck:false,
+                        name:'MacBook Pro',
+                        price:21488,
+                        count:1
+                    }
+                ],
+                Fruit:[
+                    {
+                        isCheck:false,
+                        name:'banana',
+                        price:5,
+                        count:1
+                    },
+                    {
+                        isCheck:false,
+                        name:'apple',
+                        price:10,
+                        count:1
+                    },
+                    {
+                        isCheck:false,
+                        name:'strawberry',
+                        price:20,
+                        count:1
+                    }
+                ],
+                Vegetable:[
+                    {
+                        isCheck:false,
+                        name:'tomato',
+                        price:5,
+                        count:1
+                    },
+                    {
+                        isCheck:false,
+                        name:'potato',
+                        price:10,
+                        count:1
+                    },
+                    {
+                        isCheck:false,
+                        name:'cabbage',
+                        price:20,
+                        count:1
+                    }
+                ]
+            }
+        },
+        computed:{
+            totalPrice:function(){
+                this.total=0;
+                for(var i=0;i<Object.keys(this.list).length;i++){
+                    var typeVal=Object.keys(this.list)[i];
+                    for(var n=0;n<this.list[typeVal].length;n++){
+                        var item=this.list[typeVal][n];
+                        if(item.isCheck){
+                            this.total+=parseInt(item.price)*item.count;
+                        }
+                    }
+                }
+
+                return this.total.toString().replace(/\B(?=(\d{3})+$)/g,',');
+            }
+        },
+        methods:{
+            handleReduce:function(index,num){
+                var typeVal=Object.keys(this.list)[index];
+                if (this.list[typeVal][num].count===1) return;
+                this.list[typeVal][num].count--;
+            },
+            handleAdd:function(index,num){
+                var typeVal=Object.keys(this.list)[index];
+                this.list[typeVal][num].count++;
+            },
+            handleRemove:function(index,num){
+                var typeVal=Object.keys(this.list)[index];
+                this.list[typeVal].splice(num,1);
+            },
+            switchCheck:function(index,num){
+                if(arguments.length==0){
+                    for(var i=0;i<Object.keys(this.list).length;i++){
+                        var typeVal=Object.keys(this.list)[i];
+                        for(var n=0;n<this.list[typeVal].length;n++){
+                            var item=this.list[typeVal][n];
+                            item.isCheck=true;
+                            var typeCheck=document.getElementsByClassName('typeCheck')[i];
+                            typeCheck.getElementsByClassName('checkbox')[n].checked=true;
+                        }
+                    }
+                }else{
+                    var typeVal=Object.keys(this.list)[index];
+                    var typeCheck=document.getElementsByClassName('typeCheck')[index];
+
+                    if(!this.list[typeVal][num].isCheck){
+                        this.list[typeVal][num].isCheck=true;
+                        typeCheck.getElementsByClassName('checkbox')[num].checked=true;
+                    }else {
+                        this.list[typeVal][num].isCheck=false;
+                        typeCheck.getElementsByClassName('checkbox')[num].checked=false;
+                    }
+                }
+
+            }
+        }
+    });
+</script>
+</body>
+</html>

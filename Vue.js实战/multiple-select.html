@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+        [v-cloak]{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-cloak>
+    <select name="" id="" v-model="selected" multiple>
+        <option
+            v-for="option in options"
+            :value="option.value">{{option.text}}</option>
+    </select>
+    <p>选择的项是：{{selected}}</p>
+</div>
+
+<script src="js/vue.js"></script>
+<script>
+
+    new Vue({
+        el: '#app',
+        data: {
+            selected:'html',
+            options:[
+                {
+                    text:'HTML',
+                    value:'html'
+                },
+                {
+                    text:'JavaScript',
+                    value:'js'
+                },
+                {
+                    text:'CSS',
+                    value:'css'
+                }
+            ]
+        }
+    })
+</script>
+</body>
+</html>

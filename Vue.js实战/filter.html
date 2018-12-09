@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    {{date|formateDate}}
+</div>
+
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script>
+    //在月份、日期、小时等小于10时前补0
+    var padDate = function (val) {
+        return val < 10 ? '0' + val : val;
+    };
+    new Vue({
+        el: '#app',
+        data: {
+            date: new Date()
+        },
+        filters: {
+            formateDate: function (val) {
+                var date = new Date(val);
+                var year = date.getFullYear();
+                var month = padDate(date.getMonth() + 1);
+                var day = padDate(date.getDate());
+                var hours = padDate(date.getHours());
+                var minutes = padDate(date.getMinutes());
+                var seconds = padDate(date.getSeconds());
+
+                return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+            }
+        },
+        mounted: function () {
+            var _this = this;
+            this.timer = setInterval(function () {
+                _this.date = new Date();
+            }, 1000)
+        },
+        beforeDestroy: function () {
+            if (this.timer) {
+                clearInterval(this.timer);
+            }
+        }
+    })
+</script>
+</body>
+</html>
