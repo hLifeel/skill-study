@@ -41,17 +41,57 @@
             border-top: 1px solid #3399ff;
             border-bottom: 1px solid #fff;
         }
-        .tabs-tab-active:after{
-            content: '';
-            display: block;
-            height: 1px;
-            background: #3399ff;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
         .tabs-content{
             padding: 8px 0;
+        }
+        .previous{
+            transform: translateX(-100%);
+            animation: previousAn 500ms infinite forwards;
+        }
+        .next{
+            transform: translateX(100%);
+            animation: nextAn 500ms infinite forwards;
+        }
+        .currentPrevious{
+            transform: translateX(0);
+            animation: currentPreviousAn 500ms infinite forwards;
+        }
+        .currentNext{
+            transform: translateX(0);
+            animation: currentNextAn 500ms infinite forwards;
+        }
+
+        @keyframes previousAn {
+            from{
+                transform: translateX(-100%);
+            }
+            to{
+                transform: translateX(0);
+            }
+        }
+        @keyframes nextAn {
+            from{
+                transform: translateX(100%);
+            }
+            to{
+                transform: translateX(0);
+            }
+        }
+        @keyframes currentPreviousAn {
+            from{
+                transform: translateX(0);
+            }
+            to{
+                transform: translateX(-100%);
+            }
+        }
+        @keyframes currentNextAn {
+            from{
+                transform: translateX(0);
+            }
+            to{
+                transform: translateX(100%);
+            }
         }
     </style>
 </head>

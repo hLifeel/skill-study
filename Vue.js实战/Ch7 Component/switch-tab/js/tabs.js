@@ -53,6 +53,9 @@ Vue.component('tabs',{
                 return item.$options.name==='pane'
             })
         },
+        getPanes(){
+            return document.getElementsByClassName('pane');
+        },
         updateNav(){
             this.navList=[];
             var _this=this;
@@ -63,8 +66,9 @@ Vue.component('tabs',{
                     name:pane.name||index,
                     closable:pane.closable
                 });
-                //console.log(pane.name);
-                if(!pane.name) pane.name=index;
+                if(!pane.name) {
+                    pane.name=index;
+                }
                 if(index===0){
                     if(!_this.currentValue){
                         _this.currentValue=pane.name||index;
@@ -72,7 +76,6 @@ Vue.component('tabs',{
                 }
             });
 
-            //console.log(this.navList);
             this.updateStatus();
         },
         updateStatus () {
@@ -99,8 +102,19 @@ Vue.component('tabs',{
         value: function(val){
             this.currentValue=val;
         },
-        currentValue:function(){
+        currentValue:function(newVal,oldVal){
             this.updateStatus();
+            if(newVal>oldVal){
+                this.getPanes()[newVal].classList.remove('currentPrevious','currentNext','next','previous');
+                this.getPanes()[newVal].classList.add('next');
+                this.getPanes()[oldVal].classList.remove('currentPrevious','currentNext','next','previous');
+                this.getPanes()[oldVal].classList.add('currentPrevious');
+            }else{
+                this.getPanes()[newVal].classList.remove('currentPrevious','currentNext','next','previous');
+                this.getPanes()[newVal].classList.add('previous');
+                this.getPanes()[oldVal].classList.remove('currentPrevious','currentNext','next','previous');
+                this.getPanes()[oldVal].classList.add('currentNext');
+            }
         }
     }
 });
