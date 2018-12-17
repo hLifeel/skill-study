@@ -7,7 +7,7 @@ Vue.component('tabs',{
                     :class="tabCls(item)"
                     @click="handleChange(index)">
                     {{item.label}}
-                    <div class="closeBtn" v-if="item.closable" @click.stop="closePane(index)">X</div>
+                    <div class="closeBtn" v-if="item.closeable" @click.stop="closePane(index)">X</div>
                 </div>
             </div>   
             <div class="tabs-content">
@@ -53,9 +53,6 @@ Vue.component('tabs',{
                 return item.$options.name==='pane'
             })
         },
-        getPanes(){
-            return document.getElementsByClassName('pane');
-        },
         updateNav(){
             this.navList=[];
             var _this=this;
@@ -64,7 +61,7 @@ Vue.component('tabs',{
                 _this.navList.push({
                     label:pane.label,
                     name:pane.name||index,
-                    closable:pane.closable
+                    closeable:pane.closeable
                 });
                 if(!pane.name) {
                     pane.name=index;
@@ -83,7 +80,7 @@ Vue.component('tabs',{
                 _this=this;
 
             tabs.forEach(function(tab){
-                return tab.show=tab.name===_this.currentValue;
+                tab.show=tab.name===_this.currentValue;
             })
         },
         handleChange:function (index) {
@@ -96,6 +93,38 @@ Vue.component('tabs',{
         },
         closePane:function(index){
             this.navList.splice(index,1);
+        },
+        slideLeft(newVal,oldVal){
+            var tabs=this.getTabs();
+
+            tabs[Number(newVal)].className={
+                'currentPrevious':false,
+                'currentNext':false,
+                'next':true,
+                'previous':false
+            };
+            tabs[Number(oldVal)].className={
+                'currentPrevious':true,
+                'currentNext':false,
+                'next':false,
+                'previous':false
+            };
+        },
+        slideRight(newVal,oldVal){
+            var tabs=this.getTabs();
+
+            tabs[Number(newVal)].className={
+                'currentPrevious':false,
+                'currentNext':false,
+                'next':false,
+                'previous':true
+            };
+            tabs[Number(oldVal)].className={
+                'currentPrevious':false,
+                'currentNext':true,
+                'next':false,
+                'previous':false
+            };
         }
     },
     watch:{
@@ -105,15 +134,9 @@ Vue.component('tabs',{
         currentValue:function(newVal,oldVal){
             this.updateStatus();
             if(newVal>oldVal){
-                this.getPanes()[newVal].classList.remove('currentPrevious','currentNext','next','previous');
-                this.getPanes()[newVal].classList.add('next');
-                this.getPanes()[oldVal].classList.remove('currentPrevious','currentNext','next','previous');
-                this.getPanes()[oldVal].classList.add('currentPrevious');
+                this.slideLeft(newVal,oldVal);
             }else{
-                this.getPanes()[newVal].classList.remove('currentPrevious','currentNext','next','previous');
-                this.getPanes()[newVal].classList.add('previous');
-                this.getPanes()[oldVal].classList.remove('currentPrevious','currentNext','next','previous');
-                this.getPanes()[oldVal].classList.add('currentNext');
+                this.slideRight(newVal,oldVal);
             }
         }
     }

@@ -43,22 +43,23 @@
         }
         .tabs-content{
             padding: 8px 0;
+            overflow: hidden;
         }
         .previous{
             transform: translateX(-100%);
-            animation: previousAn 500ms infinite forwards;
+            animation: previousAn 500ms forwards;
         }
         .next{
             transform: translateX(100%);
-            animation: nextAn 500ms infinite forwards;
+            animation: nextAn 500ms forwards;
         }
         .currentPrevious{
             transform: translateX(0);
-            animation: currentPreviousAn 500ms infinite forwards;
+            animation: currentPreviousAn 500ms forwards;
         }
         .currentNext{
             transform: translateX(0);
-            animation: currentNextAn 500ms infinite forwards;
+            animation: currentNextAn 500ms forwards;
         }
 
         @keyframes previousAn {
@@ -99,13 +100,13 @@
 <div id="app" v-cloak>
     {{activeKey}}
     <tabs v-model="activeKey">
-        <pane label="标签1" name="标签1" :closable="false">
+        <pane label="标签1" name="0" :closeable="false">
             标签1的内容
         </pane>
-        <pane label="标签2" name="标签2" :closable="true">
+        <pane label="标签2" name="1" :closeable="true">
             标签2的内容
         </pane>
-        <pane label="标签3" name="标签3" :closable="false">
+        <pane label="标签3" name="2" :closeable="false">
             标签3的内容
         </pane>
     </tabs>
@@ -117,7 +118,7 @@
     var app=new Vue({
         el:'#app',
         data:{
-            activeKey:'标签1'
+            activeKey:'0'
         }
     });
 </script>

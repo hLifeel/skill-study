@@ -1,7 +1,7 @@
 Vue.component('pane',{
     name:'pane',
     template:`
-        <div class="pane" v-show="show">
+        <div class="pane" v-show="show" :class="className">
             <slot></slot>
         </div>
     `,
@@ -17,14 +17,20 @@ Vue.component('pane',{
             type:String,
             default:''
         },
-        closable:{
+        closeable:{
             type:Boolean,
             default: false
         }
     },
     data:function(){
         return{
-            show:true
+            show:true,
+            className:{
+                'currentPrevious':false,
+                'currentNext':false,
+                'next':false,
+                'previous':false
+            }
         }
     },
     methods:{
